@@ -1,7 +1,7 @@
 import { Routes, Route, HashRouter } from "react-router-dom";
 import "./App.css";
-import { Home } from "@mui/icons-material";
 import LoginPage from "./pages/auth/LoginPage";
+import Home from "./pages/Home";
 
 function App() {
   return (

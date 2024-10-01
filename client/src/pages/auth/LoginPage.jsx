@@ -26,20 +26,22 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent default form submission
 
-    // Validate form inputs
-    if (!email || !password) {
-      return toast.error("All fields are required");
-    }
+    navigate("/home")
 
-    // Validate email format
-    if (!validateEmail(email)) {
-      return toast.error("Please enter a valid email");
-    }
+    // // Validate form inputs
+    // if (!email || !password) {
+    //   return toast.error("All fields are required");
+    // }
 
-    const userData = {
-      email,
-      password,
-    };
+    // // Validate email format
+    // if (!validateEmail(email)) {
+    //   return toast.error("Please enter a valid email");
+    // }
+
+    // const userData = {
+    //   email,
+    //   password,
+    // };
     // setIsLoading(true); // Set loading state to true
     // try {
     //   const data = await loginUser(userData); // Attempt to login with user data
@@ -78,14 +80,14 @@ const LoginPage = () => {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)} // Update email state on change
-              required
+              // required
             />
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)} // Update password state on change
-              required
+              // required
             />
             <button type="submit">LOG IN</button> {/* Submit button */}
           </form>
