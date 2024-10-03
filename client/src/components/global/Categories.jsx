@@ -13,7 +13,7 @@ const Categories = () => {
 
       <div className="categories_list">
         {categories.map((category, index) => (
-          <Link key={index} to={``}>
+          <Link key={index} to={category.path}>
             <div className="category">
               <img src={category.img} alt={category.label} />
               <div className="overlay"></div>
@@ -35,24 +35,28 @@ const categories = [
   {
     img: "/categories/fund1.jpg",
     label: "Ward Fund",
+    path: "/word-fund",
     // icon: <TbBeach />,
     description: "This property is close to the beach!",
   },
   {
     img: "/categories/strips.jpeg",
     label: "Glucose Strips",
+    path: "/glucose-strips",
     // icon: <TbBeach />,
     description: "This property is close to the beach!",
   },
   {
     img: "/categories/items2.webp",
     label: "Items",
+    path: "/items",
     // icon: <TbBeach />,
     description: "This property is close to the beach!",
   },
   {
     img: "/categories/fund2.jpg",
     label: "Other Funds",
+    path: "/other-funds",
     // icon: <TbBeach />,
     description: "This property is close to the beach!",
   },
