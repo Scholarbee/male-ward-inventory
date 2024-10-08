@@ -35,7 +35,7 @@ const categories = [
   {
     img: "/categories/fund1.jpg",
     label: "Ward Fund",
-    path: "/word-fund",
+    path: "/ward-fund",
     // icon: <TbBeach />,
     description: "This property is close to the beach!",
   },
