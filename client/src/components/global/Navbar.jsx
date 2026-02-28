@@ -13,17 +13,9 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-// import {
-//   SET_LOGIN,
-//   SET_TOKEN,
-//   SET_USER,
-//   selectIsLoggedIn,
-//   selectUser,
-// } from "../../redux/auth/authSlice";
-// import { logoutUser, registerAgent } from "../../redux/auth/authActions";
-// import { Backdrop, Fade, Modal, Stack, TextField } from "@mui/material";
-import { useState } from "react";
+import { SET_LOGIN, SET_USER } from "../../redux/auth/authSlice";
 import { logoutUser } from "../../redux/auth/authActions";
+import { useState } from "react";
 
 // Navbar component definition
 function Navbar() {
@@ -31,13 +23,11 @@ function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Redux state selectors called to get the user login status and user information
-  // const isLoggedIn = useSelector(selectIsLoggedIn);
-  // const userInfo = useSelector(selectUser);
-  const isLoggedIn = true;
-  const userInfo = [];
+  // Redux state selectors
+  const isLoggedIn = useSelector((state) => state.auth?.isLoggedIn);
+  const userInfo = useSelector((state) => state.auth?.user);
 
-  // State hooks for managing various UI interactions instialized with default values
+  // State hooks for managing various UI interactions
   const [anchorElNav, setAnchorElNav] = useState(null); // For navigation menu
   const [anchorElUser, setAnchorElUser] = useState(null); // For user menu
 
@@ -50,22 +40,18 @@ function Navbar() {
   // Function to log out the user
   const logOutUser = async () => {
     await logoutUser();
-    // dispatch(SET_LOGIN(false)); // Reset login state
-    // dispatch(
-    //   SET_USER({
-    //     // Clear user information
-    //     _id: "",
-    //     name: "",
-    //     email: "",
-    //     phone: "",
-    //     photo: "",
-    //     city: "",
-    //     role: "",
-    //   })
-    // );
-    // dispatch(SET_BRAND({ brandName: "", brandLocation: "", brandContact: "" }));
-    // dispatch(SET_TOKEN("")); // Clear token
-    // navigate("/"); // Redirect to homepage
+    dispatch(SET_LOGIN(false));
+    dispatch(
+      SET_USER({
+        _id: "",
+        name: "",
+        email: "",
+        phone: "",
+        photo: "",
+        role: "",
+      })
+    );
+    navigate("/");
   };
 
   // Navbar component JSX structure
@@ -91,12 +77,11 @@ function Navbar() {
               display: { xs: "none", md: "flex" },
               fontFamily: "monospace",
               fontWeight: 700,
-              // letterSpacing: ".2rem",
               color: "#f57eb6",
               textDecoration: "none",
             }}
           >
-            Scholars-Tech
+            Male Ward Inventory
           </Typography>
 
           {/* Navigation menu - Visible on small screens */}
@@ -122,57 +107,38 @@ function Navbar() {
               sx={{ display: { xs: "block", md: "none" } }}
             >
               {/* Navigation links */}
+              {isLoggedIn && userInfo?.role === "admin" && (
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">
+                    <Link
+                      to={`/admin-dashboard`}
+                      style={{ color: "black", textDecoration: "none" }}
+                    >
+                      Admin Dashboard
+                    </Link>
+                  </Typography>
+                </MenuItem>
+              )}
               <MenuItem onClick={handleCloseNavMenu}>
                 <Typography textAlign="center">
                   <Link
-                    to={`/`}
+                    to={`/home`}
                     style={{ color: "black", textDecoration: "none" }}
                   >
-                    {"Home"}
+                    Home
                   </Link>
                 </Typography>
               </MenuItem>
-              {isLoggedIn ? (
-                <MenuItem onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">
-                    <Link
-                      to={`/user/dashboard`}
-                      style={{ color: "black", textDecoration: "none" }}
-                    >
-                      {"Dashboard"}
-                    </Link>
-                  </Typography>
-                </MenuItem>
-              ) : (
-                <MenuItem onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">
-                    <Link
-                      to={`/login`}
-                      style={{ color: "black", textDecoration: "none" }}
-                    >
-                      {"Login"}
-                    </Link>
-                  </Typography>
-                </MenuItem>
-              )}
-              {/* Option to become an agent if the user is logged in */}
-              {userInfo.role === "user" && (
-                <MenuItem
-                  onClick={() => {
-                    handleCloseNavMenu();
-                    // setOpen(true);
-                  }}
-                >
-                  <Typography textAlign="center">
-                    <Link
-                      // to={`/user/dashboard`}
-                      style={{ color: "black", textDecoration: "none" }}
-                    >
-                      {"Become Agent"}
-                    </Link>
-                  </Typography>
-                </MenuItem>
-              )}
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">
+                  <Link
+                    to={`/ward-fund`}
+                    style={{ color: "black", textDecoration: "none" }}
+                  >
+                    Ward Fund
+                  </Link>
+                </Typography>
+              </MenuItem>
             </Menu>
           </Box>
 
@@ -188,64 +154,51 @@ function Navbar() {
               flexGrow: 1,
               fontFamily: "monospace",
               fontWeight: 700,
-              // letterSpacing: ".3rem",
               color: "#f57eb6",
               textDecoration: "none",
             }}
           >
-            Scholars-Tech
+            Male Ward
           </Typography>
+
           {/* Desktop view navigation buttons */}
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            {isLoggedIn && userInfo?.role === "admin" && (
+              <Button
+                onClick={() => {
+                  handleCloseNavMenu();
+                  navigate("/admin-dashboard");
+                }}
+                sx={{ my: 2, color: "white", display: "block", mr: 2 }}
+              >
+                Admin Dashboard
+              </Button>
+            )}
             <Button
               onClick={() => {
                 handleCloseNavMenu();
-                navigate("/");
+                navigate("/home");
               }}
               sx={{ my: 2, color: "white", display: "block", mr: 2 }}
             >
               Home
             </Button>
-            {isLoggedIn ? (
-              <Button
-                onClick={() => {
-                  handleCloseNavMenu();
-                  navigate("/user/dashboard");
-                }}
-                sx={{ my: 2, color: "white", display: "block", mr: 2 }}
-              >
-                Dashboard
-              </Button>
-            ) : (
-              <Button
-                onClick={() => {
-                  handleCloseNavMenu();
-                  navigate("/login");
-                }}
-                sx={{ my: 2, color: "white", display: "block", mr: 2 }}
-              >
-                Login
-              </Button>
-            )}
-            {/* Option to become an agent if the user is logged in */}
-            {userInfo.role === "user" && (
-              <Button
-                onClick={() => {
-                  handleCloseNavMenu();
-                  // setOpen(true);
-                }}
-                sx={{ my: 2, color: "white", display: "block", mr: 2 }}
-              >
-                Become An Agent
-              </Button>
-            )}
+            <Button
+              onClick={() => {
+                handleCloseNavMenu();
+                navigate("/ward-fund");
+              }}
+              sx={{ my: 2, color: "white", display: "block", mr: 2 }}
+            >
+              Ward Fund
+            </Button>
           </Box>
 
           {/* User settings menu */}
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="User Avatar" src={userInfo.photo} />
+                <Avatar alt="User Avatar" src={userInfo?.photo} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -285,7 +238,7 @@ function Navbar() {
               ) : (
                 <MenuItem onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">
-                    <Link to="/login" style={{ textDecoration: "none" }}>
+                    <Link to="/" style={{ textDecoration: "none" }}>
                       Login
                     </Link>
                   </Typography>
@@ -299,17 +252,4 @@ function Navbar() {
   );
 }
 
-export default Navbar; // Exporting Navbar component
-
-// Modal style object
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+export default Navbar;

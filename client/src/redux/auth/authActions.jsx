@@ -2,6 +2,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+axios.defaults.withCredentials = true;
 
 export const validateEmail = (email) => {
   return email.match(
@@ -94,9 +95,7 @@ export const resetPassword = async (userData, resetToken) => {
 // Get Login Status
 export const getLoginStatus = async (token) => {
   try {
-    const response = await axios.get(
-      `${BACKEND_URL}/api/users/login-status/${token}`
-    );
+    const response = await axios.get(`${BACKEND_URL}/api/users/login-status`);
     return response.data;
   } catch (error) {
     const message =
@@ -141,8 +140,8 @@ export const updateUser = async (formData, token) => {
 // change Password
 export const changePassword = async (formData, token) => {
   try {
-    const response = await axios.patch(
-      `${BACKEND_URL}/api/users/changepassword/${token}`,
+    const response = await axios.post(
+      `${BACKEND_URL}/api/users/change-password/${token}`,
       formData
     );
     return response.data;

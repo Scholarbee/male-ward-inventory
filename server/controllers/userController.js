@@ -1,9 +1,11 @@
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 const Token = require("../models/tokenModel");
 const User = require("../models/userModel");
 const cloudinary = require("../utils/cloudinary");
+const sendEmail = require("../utils/sendEmail");
 
 /**
  * This function generate and return a token that expires in 24hrs for authentication
@@ -23,9 +25,9 @@ const generateToken = (id) => {
  * for authentication and authorization processes.
  */
 exports.addtUser = asyncHandler(async (req, res) => {
-  const { name, email, city, phone, password } = req.body;
+  const { name, email, phone, role } = req.body;
 
-  if (!name || !email || !password || !city || !phone) {
+  if (!name || !email || !phone || !role) {
     res.status(400);
     throw new Error("Please all fields are required.");
   }
@@ -37,43 +39,38 @@ exports.addtUser = asyncHandler(async (req, res) => {
   }
 
   // upload image in cloudinary
-  const b64 = Buffer.from(req.file.buffer).toString("base64");
-  let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
-  const result = await cloudinary.handleUpload(dataURI);
+  // const b64 = Buffer.from(req.file.buffer).toString("base64");
+  // let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+  // const result = await cloudinary.handleUpload(dataURI);
 
-  if (!result) {
-    res.status(400);
-    throw new Error("Unable to save image to cloudinary");
-  }
+  // if (!result) {
+  //   res.status(400);
+  //   throw new Error("Unable to save image to cloudinary");
+  // }
 
-  //   Generate Token
-  const token = generateToken(user._id);
 
   const user = await User.create({
     name,
     email,
     phone,
-    password,
-    photo: {
-      public_id: result.public_id,
-      url: result.secure_url,
-    },
-    token,
+    password : phone,
+    role,
+    // photo: {
+    //   public_id: result.public_id,
+    //   url: result.secure_url,
+    // },
   });
 
   
   if (user) {
-    const { _id, name, email, brand, city, phone, photo, role } = user;
+    const { _id, name, email, phone, photo, role } = user;
     res.status(201).json({
       _id,
       name,
       email,
-      city,
-      brand,
       phone,
       role,
-      photo: photo.url,
-      token,
+      // photo: photo.url,
     });
   } else {
     res.status(400);
@@ -140,6 +137,15 @@ exports.login = asyncHandler(async (req, res) => {
   //   Generate Token
   const token = generateToken(user._id);
 
+  const isProduction = process.env.NODE_ENV === "production";
+  res.cookie("artikonToken", token, {
+    path: "/",
+    httpOnly: true,
+    sameSite: isProduction ? "none" : "lax",
+    secure: isProduction,
+    maxAge: 24 * 60 * 60 * 1000,
+  });
+
   
   if (user && verified) {
     const { _id, name, email, brand, photo, city, phone, role } = user;
@@ -165,12 +171,13 @@ exports.login = asyncHandler(async (req, res) => {
  * This function logout users by expiring the user token
  */
 exports.logout = asyncHandler(async (req, res) => {
+  const isProduction = process.env.NODE_ENV === "production";
   res.cookie("artikonToken", "", {
     path: "/",
     httpOnly: true,
     expires: new Date(0),
-    sameSite: "none",
-    secure: true,
+    sameSite: isProduction ? "none" : "lax",
+    secure: isProduction,
   });
   return res.status(200).json({ success: true });
 });

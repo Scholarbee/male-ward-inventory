@@ -22,9 +22,12 @@ app.use(
 
 // Setting up routes
 const userRouter = require("./routes/userRoutes");
+const adminRouter = require("./routes/adminRoute");
+const userAuth = require("./middleWare/authMiddleware");
 
-
+app.use("/api/user", userRouter);
 app.use("/api/users", userRouter);
+app.use("/api/admin", userAuth, adminRouter);
 
 
 // Setting up routes

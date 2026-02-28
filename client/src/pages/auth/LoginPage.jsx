@@ -26,37 +26,45 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent default form submission
 
-    navigate("/home")
+    // Validate form inputs
+    if (!email || !password) {
+      return toast.error("All fields are required");
+    }
 
-    // // Validate form inputs
-    // if (!email || !password) {
-    //   return toast.error("All fields are required");
-    // }
+    // Validate email format
+    if (!validateEmail(email)) {
+      return toast.error("Please enter a valid email");
+    }
 
-    // // Validate email format
-    // if (!validateEmail(email)) {
-    //   return toast.error("Please enter a valid email");
-    // }
+    const userData = {
+      email,
+      password,
+    };
+    setIsLoading(true); // Set loading state to true
+    try {
+      const data = await loginUser(userData); // Attempt to login with user data
 
-    // const userData = {
-    //   email,
-    //   password,
-    // };
-    // setIsLoading(true); // Set loading state to true
-    // try {
-    //   const data = await loginUser(userData); // Attempt to login with user data
-    //   // Dispatch various actions to set user data in Redux state
-    //   dispatch(SET_LOGIN(true));
-    //   dispatch(SET_TOKEN(data.token));
-    //   dispatch(SET_NAME(data.name));
-    //   dispatch(SET_USER(data));
-    //   dispatch(SET_BRAND(data.brand));
-    //   console.log(data); // Log user data for debugging
-    //   navigate("/user/dashboard"); // Navigate to user dashboard after successful login
-    //   setIsLoading(false); // Set loading state to false
-    // } catch (error) {
-    //   setIsLoading(false); // Handle error and set loading state to false
-    // }
+      if (!data || !data.token) {
+        setIsLoading(false);
+        return;
+      }
+
+      // Dispatch various actions to set user data in Redux state
+      dispatch(SET_LOGIN(true));
+      dispatch(SET_TOKEN(data.token));
+      dispatch(SET_NAME(data.name));
+      dispatch(SET_USER(data));
+      dispatch(SET_BRAND(data.brand));
+
+      if (data.role === "admin") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/home");
+      }
+      setIsLoading(false); // Set loading state to false
+    } catch (error) {
+      setIsLoading(false); // Handle error and set loading state to false
+    }
   };
 
   return (
@@ -89,7 +97,10 @@ const LoginPage = () => {
               onChange={(e) => setPassword(e.target.value)} // Update password state on change
               // required
             />
-            <button type="submit">LOG IN</button> {/* Submit button */}
+            <button type="submit" disabled={isLoading}>
+              {isLoading ? "LOGGING IN..." : "LOG IN"}
+            </button>{" "}
+            {/* Submit button */}
           </form>
           <Link to={"/"}>Forgot password? Click Here</Link>
         </div>

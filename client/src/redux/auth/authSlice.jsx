@@ -47,9 +47,9 @@ export const {
   SET_BRAND,
 } = authSlice.actions;
 
-export const selectIsLoggedIn = (state) => state.isLoggedIn;
-export const selectToken = (state) => state.token;
-export const selectName = (state) => state.name;
-export const selectUser = (state) => state.user;
+export const selectIsLoggedIn = (state) => state.auth?.isLoggedIn;
+export const selectToken = (state) => state.auth?.token;
+export const selectName = (state) => state.auth?.name;
+export const selectUser = (state) => state.auth?.user;
 
 export default authSlice.reducer;

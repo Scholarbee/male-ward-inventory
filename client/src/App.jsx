@@ -3,7 +3,9 @@ import "./App.css";
 import LoginPage from "./pages/auth/LoginPage";
 import Home from "./pages/Home";
 import WardFund from "./pages/WardFund";
-import FamilyWelfare from "./pages/FamilyWelfare";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminRoute from "./services/AdminRoute";
+import UserRoute from "./services/UserRoute";
 
 function App() {
   return (
@@ -12,9 +14,30 @@ function App() {
         {/* <ToastContainer /> */}
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/ward-fund" element={<WardFund />} />
-          <Route path="/contributions" element={<FamilyWelfare />} />
+          <Route
+            path="/home"
+            element={
+              <UserRoute>
+                <Home />
+              </UserRoute>
+            }
+          />
+          <Route
+            path="/ward-fund"
+            element={
+              <UserRoute>
+                <WardFund />
+              </UserRoute>
+            }
+          />
+          <Route
+            path="/admin-dashboard"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
         </Routes>
       </HashRouter>
     </>
