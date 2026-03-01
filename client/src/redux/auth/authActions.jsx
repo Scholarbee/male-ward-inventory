@@ -1,7 +1,8 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+export const BACKEND_URL =
+  import.meta.env.VITE_BACKEND_URL || "http://localhost:2012";
 axios.defaults.withCredentials = true;
 
 export const validateEmail = (email) => {
