@@ -1,5 +1,32 @@
 import { Link } from "react-router-dom";
 
+const categories = [
+  {
+    img: "/categories/fund1.jpg",
+    label: "Ward Fund",
+    path: "/ward-fund",
+    description: "Track ward fund contributions",
+  },
+  {
+    img: "/categories/strips.jpeg",
+    label: "Glucose Strips",
+    path: "/glucose-strips",
+    description: "Manage glucose strip inventory",
+  },
+  {
+    img: "/categories/items2.webp",
+    label: "Items",
+    path: "/items",
+    description: "Manage ward items",
+  },
+  {
+    img: "/categories/fund2.jpg",
+    label: "Other Funds",
+    path: "/other-funds",
+    description: "Track other fund sources",
+  },
+];
+
 const Categories = () => {
   return (
     <div className="container mx-auto px-4 py-12">
@@ -36,34 +63,3 @@ const Categories = () => {
 };
 
 export default Categories;
-
-const categories = [
-  {
-    img: "/categories/fund1.jpg",
-    label: "Ward Fund",
-    path: "/ward-fund",
-    // icon: <TbBeach />,
-    description: "This property is close to the beach!",
-  },
-  {
-    img: "/categories/strips.jpeg",
-    label: "Glucose Strips",
-    path: "/glucose-strips",
-    // icon: <TbBeach />,
-    description: "This property is close to the beach!",
-  },
-  {
-    img: "/categories/items2.webp",
-    label: "Items",
-    path: "/items",
-    // icon: <TbBeach />,
-    description: "This property is close to the beach!",
-  },
-  {
-    img: "/categories/fund2.jpg",
-    label: "Other Funds",
-    path: "/other-funds",
-    // icon: <TbBeach />,
-    description: "This property is close to the beach!",
-  },
-];
